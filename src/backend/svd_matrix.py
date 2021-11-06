@@ -14,7 +14,7 @@ def eigenvalue(matrix, eps=1e-10):
 
     :param matrix: Matrix-like object whose eigenvalues to be calculated.
     :param eps: Small value acting as comparator to which entries below the main
-    diagonal is compared to. The default value is 1e-10.
+                diagonal is compared to. The default value is 1e-10.
     :return: An ndarray of matrix eigenvalues, sorted in descending order.
     """
     enough_iteration = False
@@ -39,14 +39,15 @@ def eigenvalue(matrix, eps=1e-10):
 
 def solve_homogeneous(matrix, eps=1e-10):
     """
-    Returns an ndarray of solutions to a homogeneous system of linear equations.
-    Solutions are computed by finding the null-space of the system matrix.
+    Returns an ndarray of solutions to a homogeneous system of linear
+    equations. Solutions are computed by finding the null-space of the system
+    matrix.
 
     Reference: https://stackoverflow.com/questions/1835246/how-to-solve-homogeneous-linear-equations-with-numpy
 
     :param matrix: Matrix-like object.
-    :param eps: Small value acting as comparator to which entries of the singular matrix
-    is compared to.
+    :param eps: Small value acting as comparator to which entries of the
+                singular matrix is compared to.
     :return: An ndarray of solutions.
     """
     u, s, vh = np.linalg.svd(matrix)
@@ -59,11 +60,9 @@ def ortho_singular(matrix, ortho_type):
     Returns an ndarray of orthogonal matrix created using the eigenvalues of
     said matrix.
 
-    Reference: https://www.math.utah.edu/~goller/F15_M2270/BradyMathews_SVDImage.pdf
-
     :param matrix: Matrix-like object.
-    :param ortho_type: Type of matrix output (i.e. left or right)
-    :return: An orthogonal matrix consisted of singular vectors
+    :param ortho_type: Type of matrix output (i.e. left or right).
+    :return: An orthogonal matrix consisted of singular vectors.
     """
     if ortho_type == "left":
         singular = np.matmul(matrix, np.transpose(matrix))
@@ -91,6 +90,28 @@ def ortho_singular(matrix, ortho_type):
     return ortho_matrix
 
 
+def singular_diagonal(matrix):
+    """
+    Returns an ndarray of diagonal matrix whose main diagonal consists of
+    the matrix's singular values (i.e., the square root of its eigenvalues).
+
+    :param matrix: Matrix-like object.
+    :return: An ndarray of singular diagonal matrix.
+    """
+    matrix_shape = np.shape(matrix)
+    if matrix_shape[0] < matrix_shape[1]:
+        singular_matrix = np.matmul(matrix, np.transpose(matrix))
+    else:
+        singular_matrix = np.matmul(np.transpose(matrix), matrix)
+
+    singular_eigen = eigenvalue(singular_matrix)
+    singular_value = np.sqrt(singular_eigen)
+    sing_diag_matrix = np.zeros(matrix_shape)
+    np.fill_diagonal(sing_diag_matrix, singular_value)
+
+    return sing_diag_matrix
+
+
 def decompose(matrix):
     pass
 
@@ -104,7 +125,9 @@ if __name__ == "__main__":
     # print(arr_result)
     test_array = [[3, 1, 1],
                   [-1, 3, 1]]
-    ortho_result_left = ortho_singular(test_array, "left")
-    ortho_result_right = ortho_singular(test_array, "right")
-    print(ortho_result_left)
-    print(ortho_result_right)
+    # ortho_result_left = ortho_singular(test_array, "left")
+    # ortho_result_right = ortho_singular(test_array, "right")
+    sing_diag = singular_diagonal(test_array)
+    # print(ortho_result_left)
+    # print(ortho_result_right)
+    print(sing_diag)
