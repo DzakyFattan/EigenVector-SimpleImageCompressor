@@ -113,7 +113,22 @@ def singular_diagonal(matrix):
 
 
 def decompose(matrix):
-    pass
+    """
+    Returns a tuple consisted of an ndarray U representing a left-singular
+    matrix, an ndarray Σ representing a singular-diagonal matrix, and an
+    ndarray V* representing a transposed righ-singular matrix.
+
+    Reference:
+    https://informatika.stei.itb.ac.id/~rinaldi.munir/AljabarGeometri/2020-2021/Algeo-19b-Singular-value-decomposition.pdf
+
+    :param matrix: Matrix-like object.
+    :return: A tuple consisted of U, Σ, and V*
+    """
+    left_singular = ortho_singular(matrix, "left")
+    diagonal_singular = singular_diagonal(matrix)
+    right_singular = ortho_singular(matrix, "right").transpose()
+
+    return left_singular, diagonal_singular, right_singular
 
 
 if __name__ == "__main__":
@@ -127,7 +142,13 @@ if __name__ == "__main__":
                   [-1, 3, 1]]
     # ortho_result_left = ortho_singular(test_array, "left")
     # ortho_result_right = ortho_singular(test_array, "right")
-    sing_diag = singular_diagonal(test_array)
+    # sing_diag = singular_diagonal(test_array)
     # print(ortho_result_left)
     # print(ortho_result_right)
-    print(sing_diag)
+    # print(sing_diag)
+    decomposition = decompose(test_array)
+    for array in decomposition:
+        print(array)
+    result = np.matmul(decomposition[0], decomposition[1])
+    result = np.matmul(result, decomposition[2])
+    print(result)
