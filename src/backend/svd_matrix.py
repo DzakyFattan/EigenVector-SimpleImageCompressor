@@ -3,9 +3,13 @@
 # Contributor : 13520042
 
 import numpy as np
+import sys
+import traceback
+
+eigenvalue_array = np.array([])
 
 
-def eigenvalue(matrix, eps=1e-10):
+def eigenvalue(matrix, eps=1e-5):
     """
     Returns an ndarray of matrix eigenvalues, sorted descendingly.
     Eigenvalues are approximated using QR-decomposition.
@@ -24,7 +28,8 @@ def eigenvalue(matrix, eps=1e-10):
             orthogonal, upper_tri = np.linalg.qr(matrix)
         except np.linalg.LinAlgError:
             print("Matrix doesn't have eigenvalues.")
-            return
+            traceback.print_exc()
+            sys.exit(1)
 
         matrix = np.matmul(upper_tri, orthogonal)
         lower_tri = np.tril(matrix, k=-1)
@@ -37,7 +42,7 @@ def eigenvalue(matrix, eps=1e-10):
     return eigenvalues
 
 
-def solve_homogeneous(matrix, eps=1e-10):
+def solve_homogeneous(matrix):
     """
     Returns an ndarray of solutions to a homogeneous system of linear
     equations. Solutions are computed by finding the null-space of the system
@@ -46,12 +51,10 @@ def solve_homogeneous(matrix, eps=1e-10):
     Reference: https://stackoverflow.com/questions/1835246/how-to-solve-homogeneous-linear-equations-with-numpy
 
     :param matrix: Matrix-like object.
-    :param eps: Small value acting as comparator to which entries of the
-                singular matrix is compared to.
     :return: An ndarray of solutions.
     """
     u, s, vh = np.linalg.svd(matrix)
-    solutions = np.compress(s <= eps, vh, axis=0)
+    solutions = np.compress(s == np.amin(s), vh, axis=0)
     return solutions
 
 
@@ -64,6 +67,8 @@ def ortho_singular(matrix, ortho_type):
     :param ortho_type: Type of matrix output (i.e. left or right).
     :return: An orthogonal matrix consisted of singular vectors.
     """
+    global eigenvalue_array
+
     if ortho_type == "left":
         singular = np.matmul(matrix, np.transpose(matrix))
     elif ortho_type == "right":
@@ -72,13 +77,12 @@ def ortho_singular(matrix, ortho_type):
         print("Invalid ortho_type!")
         return
 
-    eigen_singular = eigenvalue(singular)
     singular_shape = np.shape(singular)
     ortho_matrix = np.empty(singular_shape)
 
-    for i in range(len(eigen_singular)):
+    for i in range(len(eigenvalue_array)):
         eigen_identity = np.zeros(singular_shape)
-        np.fill_diagonal(eigen_identity, eigen_singular[i])
+        np.fill_diagonal(eigen_identity, eigenvalue_array[i])
         singular_eq = np.subtract(singular, eigen_identity)
 
         singular_vector = solve_homogeneous(singular_eq)
@@ -98,14 +102,10 @@ def singular_diagonal(matrix):
     :param matrix: Matrix-like object.
     :return: An ndarray of singular diagonal matrix.
     """
-    matrix_shape = np.shape(matrix)
-    if matrix_shape[0] < matrix_shape[1]:
-        singular_matrix = np.matmul(matrix, np.transpose(matrix))
-    else:
-        singular_matrix = np.matmul(np.transpose(matrix), matrix)
+    global eigenvalue_array
 
-    singular_eigen = eigenvalue(singular_matrix)
-    singular_value = np.sqrt(singular_eigen)
+    matrix_shape = np.shape(matrix)
+    singular_value = np.sqrt(eigenvalue_array)
     sing_diag_matrix = np.zeros(matrix_shape)
     np.fill_diagonal(sing_diag_matrix, singular_value)
 
@@ -124,6 +124,16 @@ def decompose(matrix):
     :param matrix: Matrix-like object.
     :return: A tuple consisted of U, Σ, and V*
     """
+    global eigenvalue_array
+
+    matrix_shape = np.shape(matrix)
+    if matrix_shape[0] < matrix_shape[1]:
+        singular_matrix = np.matmul(matrix, np.transpose(matrix))
+    else:
+        singular_matrix = np.matmul(np.transpose(matrix), matrix)
+
+    eigenvalue_array = eigenvalue(singular_matrix)
+
     left_singular = ortho_singular(matrix, "left")
     diagonal_singular = singular_diagonal(matrix)
     right_singular = ortho_singular(matrix, "right").transpose()
