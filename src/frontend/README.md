@@ -1,4 +1,4 @@
-# nameofproject
+# IMGCompressor
 
 ## Project setup
 ```
