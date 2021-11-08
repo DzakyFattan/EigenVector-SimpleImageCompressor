@@ -18,7 +18,7 @@ def recompose(matrix, mode):
 
     recomposed_matrix = reduced_left @ reduced_singular @ reduced_right
 
-    return recomposed_matrix
+    return recomposed_matrix.astype("uint8")
 
 
 def compress(og_image, mode=1):
