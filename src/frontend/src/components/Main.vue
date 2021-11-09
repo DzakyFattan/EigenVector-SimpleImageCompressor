@@ -1,63 +1,79 @@
 <template>
-<div class="main">
-<label for="file-upload" class="custom-file-upload">
-    <i class="fa fa-cloud-upload"></i> Upload Image
-</label>
-<input id="file-upload" type="file" @change="onFileChange" />
-  <div v-if="url" class="card">
-    <div class="compress">Image compression rate : </div>
-    <input class="inputcompress" type="text" v-model="ratio">
-    <div id="preview">
-    <img :src="url" />
-    </div>
-    <button @click="showresult=true" class="button">Apply</button>
-    <div v-show="showresult">
-      <img src="../assets/Arrow.png" class="imgarrow">
-      <div class="imgpercentage">Image pixel difference percentage : {{percentage}}</div>
-      <div class="imgtime">Image pixel compression time : {{time}}</div>
-    
+  <div class="main">
+    <label for="file-upload" class="custom-file-upload">
+      <i class="fa fa-cloud-upload"></i> Upload Image
+    </label>
+    <input id="file-upload" type="file" @change="onFileChange" />
+    <div v-if="url" class="card">
+      <div class="compress">Image compression rate :</div>
+      <input class="inputcompress" type="text" v-model="ratio" />
+      <div id="preview">
+        <img :src="url" />
+      </div>
+      <button @click="showresult = true" class="button">Apply</button>
+      <div v-show="showresult">
+        <img src="../assets/Arrow.png" class="imgarrow" />
+        <div class="imgpercentage">
+          Image pixel difference percentage : {{ percentage }}
+        </div>
+        <div class="imgtime">Image pixel compression time : {{ time }}</div>
+      </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>
-  export default {
-    name:'Main',
-    data () {
+import axios from 'axios';
+export default {
+  name: "Main",
+  data() {
     return {
-       url: null,
-       ratio :'',
-       showresult : false,
-       percentage : '20',
-       time: '30',
-    }
+      url: null,
+      ratio: "",
+      showresult: false,
+      percentage: "20",
+      time: "30",
+    };
   },
   methods: {
+    getResponse(){
+      const path = 'http://localhost:5000/'
+      axios.get(path)
+      .then ((res) => {
+        console.log(res.data)
+        this.msg = res.data;
+      })
+      .catch ((err) => {
+        console.error(err);
+      })
+    },
+    created(){
+      this.getResponse
+    },
     onFileChange(e) {
       const file = e.target.files[0];
       this.url = URL.createObjectURL(file);
-    }
+    },
   },
-}
+};
 </script>
 
 <style scoped>
 .card {
-    box-shadow: inset 0 4px 4px 0 rgba(0, 0, 0, 0.25);
-    transition: 0.3s;
-    padding: 16px;
-    margin-bottom: 20px;
-    width: 1256px;
-    height:580px;
-    left: 92px;
-    top: 50px;
-    border-radius: 14px;
-    border: 1px solid #15D3FD;
-    position: absolute;
+  box-shadow: inset 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+  transition: 0.3s;
+  padding: 16px;
+  margin-bottom: 20px;
+  width: 1256px;
+  height: 580px;
+  left: 92px;
+  top: 50px;
+  border-radius: 14px;
+  border: 1px solid #15d3fd;
+  position: absolute;
 }
 .card:hover {
-    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
 }
 
 #preview {
@@ -75,40 +91,40 @@
 }
 
 input[type="file"] {
-    display: none;
+  display: none;
 }
 .custom-file-upload {
-    border: 1px solid #ccc;
-    display: inline-block;
-    padding: 6px 12px;
-    cursor: pointer;
-    position: absolute;
-left: 15px;
+  border: 1px solid #ccc;
+  display: inline-block;
+  padding: 6px 12px;
+  cursor: pointer;
+  position: absolute;
+  left: 15px;
 }
 
 .main {
- position: absolute;
- width: 1256px;
- height: 641px;
- left: 92px;
- top: 275px;
+  position: absolute;
+  width: 1256px;
+  height: 641px;
+  left: 92px;
+  top: 275px;
 }
 
-.compress{
-position: absolute;
-left: 70px;
+.compress {
+  position: absolute;
+  left: 70px;
 
-font-family: Nunito;
-font-style: normal;
-font-weight: normal;
-font-size: 24px;
-line-height: 33px;
-text-align: left;
+  font-family: Nunito;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 24px;
+  line-height: 33px;
+  text-align: left;
 
-color: #000000;
+  color: #000000;
 }
 .button {
-  background-color: #4FE4F9;
+  background-color: #4fe4f9;
   color: white;
   padding: 5px 10px;
   text-align: center;
@@ -118,9 +134,8 @@ color: #000000;
   position: absolute;
   left: 400px;
   top: 18px;
-  
 }
-input[type=text] {
+input[type="text"] {
   border: 2px solid;
   width: 2%;
   border-radius: 4px;
@@ -136,30 +151,30 @@ input[type=text] {
 }
 
 .imgtime {
-position: absolute;
-left: 70px;
-top: 550px;
-font-family: Nunito;
-font-style: normal;
-font-weight: normal;
-font-size: 24px;
-line-height: 33px;
-text-align: left;
+  position: absolute;
+  left: 70px;
+  top: 550px;
+  font-family: Nunito;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 24px;
+  line-height: 33px;
+  text-align: left;
 
-color: #000000;
+  color: #000000;
 }
-.imgpercentage{
-position: absolute;
-left: 70px;
-top: 500px;
+.imgpercentage {
+  position: absolute;
+  left: 70px;
+  top: 500px;
 
-font-family: Nunito;
-font-style: normal;
-font-weight: normal;
-font-size: 24px;
-line-height: 33px;
-text-align: left;
+  font-family: Nunito;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 24px;
+  line-height: 33px;
+  text-align: left;
 
-color: #000000;
+  color: #000000;
 }
 </style>

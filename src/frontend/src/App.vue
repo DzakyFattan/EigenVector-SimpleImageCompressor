@@ -1,31 +1,31 @@
 <template>
-  <Header/>
-  <Main />
-  <Footer/>
+  <div id="App">
+    <Header />
+    <Footer />
+    <Main />
+    <router-view />
+  </div>
 </template>
 
 <script>
-import Header from './components/Header.vue'
-import Footer from './components/Footer.vue'
-import Main from './components/Main.vue'
-
+import Header from "./components/Header.vue";
+import Footer from "./components/Footer.vue";
+import Main from "./components/Main.vue";
 
 export default {
-  name: 'App',
-  components : {
+  name: "App",
+  components: {
     Header,
     Footer,
     Main,
   },
   data() {
-    return {
-    }
+    return {};
   },
   provide() {
-    return {
-    }
-  }
-}
+    return {};
+  },
+};
 </script>
 
 <style>
@@ -37,6 +37,4 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
-
-
 </style>

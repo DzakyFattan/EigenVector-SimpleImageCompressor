@@ -145,3 +145,4 @@ dmypy.json
 .env.test.local
 .env.production.local
 
+src/backend/tempCodeRunnerFile.py
