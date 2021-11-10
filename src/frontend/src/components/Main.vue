@@ -3,7 +3,7 @@
     <label for="file-upload" class="custom-file-upload">
       <i class="fa fa-cloud-upload"></i> Upload Image
     </label>
-    <input id="file-upload" type="file" @change="onFileChange" />
+    <input id="file-upload" accept="image/*" type="file" @change="onFileChange" />
     <div v-if="url" class="card">
       <div class="compress">Image compression rate :</div>
       <input class="inputcompress" type="text" v-model="ratio" />
@@ -24,6 +24,7 @@
 
 <script>
 import axios from 'axios';
+const API_URL = 'http://127.0.0.1:5000'
 export default {
   name: "Main",
   data() {
@@ -33,27 +34,30 @@ export default {
       showresult: false,
       percentage: "20",
       time: "30",
+      uploadedImage: ''
     };
   },
   methods: {
-    getResponse(){
-      const path = 'http://localhost:5000/'
-      axios.get(path)
-      .then ((res) => {
-        console.log(res.data)
-        this.msg = res.data;
-      })
-      .catch ((err) => {
-        console.error(err);
-      })
-    },
-    created(){
-      this.getResponse
-    },
     onFileChange(e) {
-      const file = e.target.files[0];
-      this.url = URL.createObjectURL(file);
+      let files = e.target.files || e.dataTransfer.files
+      const file = e.target.files[0]
+      this.url = URL.createObjectURL(file)
+      this.createImage(files[0])
     },
+    createImage(file) {
+      let reader = new FileReader()
+      reader.onload = (e) => {
+        this.uploadedImage = e.target.result
+      }
+      reader.readAsDataURL(file)
+    },
+    onUploadImage() {
+      var params = new FormData()
+      params.append('image', this.uploadedImage)
+      axios.post(`${API_URL}`, params).then(function (response) {
+        console.log(response)
+      })
+    }
   },
 };
 </script>

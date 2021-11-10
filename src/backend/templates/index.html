@@ -1,0 +1,25 @@
+<html>
+
+<head>
+  <title>File Upload</title>
+</head>
+
+<body>
+  <h1>File Upload</h1>
+  <form method="POST" action="http://localhost:5000/" enctype="multipart/form-data">
+    <input type="file" accept="image/*" name="file" onchange="loadFile(event)">
+    <p><input type="submit" value="Submit"></p>
+    <img id="output" />
+    <script>
+      var loadFile = function (event) {
+        var output = document.getElementById('output');
+        output.src = URL.createObjectURL(event.target.files[0]);
+        output.onload = function () {
+          URL.revokeObjectURL(output.src) // free memory
+        }
+      };
+    </script>
+  </form>
+</body>
+
+</html>

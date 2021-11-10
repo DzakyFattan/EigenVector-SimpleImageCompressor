@@ -1,17 +1,16 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import Vue from 'vue'
+import Router from 'vue-router'
+import Main from '@/components/Main'
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+Vue.use(Router)
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+export default new Router({
+  mode: 'history',
+  routes: [
+    {
+      path: '/',
+      name: 'Main',
+      component: Main
+    }
+  ]
+})
