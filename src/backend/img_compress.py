@@ -8,6 +8,15 @@ import svd_matrix as svd
 
 
 def recompose(matrix, mode):
+    """
+    Recompose the original image matrix from its Singular Value Decomposition.
+
+    :param matrix: A tuple of left-orthogonal matrix, singular matrix, and
+                   right_orthogonal matrix, all normalised.
+    :param mode: Integer representing the proportion of matrix row and column
+                 to be removed.
+    :return: An ndarray of recomposed and rescaled image matrix.
+    """
     slicing_ratio = 1 - mode/10
     original_size = np.shape(matrix[1])[1]
 
@@ -22,6 +31,14 @@ def recompose(matrix, mode):
 
 
 def compress(og_image, mode=5):
+    """
+    Compress a given image using Singular Value Decomposition.
+
+    :param og_image: An image object.
+    :param mode: Integer representing the proportion of matrix row and column
+                 to be removed. The default value is 5.
+    :return: A compressed image based on the mode.
+    """
     image = Image.open(og_image)
     image_matrix = np.asarray(image)
 

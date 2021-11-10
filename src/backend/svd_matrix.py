@@ -6,10 +6,8 @@ import numpy as np
 import sys
 import traceback
 
-eigenvalue_array = np.array([])
 
-
-def eigenvalue(matrix, eps=1e-5):
+def eigenvalue(matrix, eps=1e-10):
     """
     Returns an ndarray of matrix eigenvalues, sorted descendingly.
     Eigenvalues are approximated using QR-decomposition.
@@ -37,7 +35,10 @@ def eigenvalue(matrix, eps=1e-5):
         if abs(np.amax(lower_tri)) < eps and abs(np.amin(lower_tri)) < eps:
             enough_iteration = True
 
-    eigenvalues = np.flip(np.sort(np.unique(np.diagonal(matrix))))
+    eigenvalues = np.flip(np.sort(np.diagonal(matrix)))
+    for i in range(len(eigenvalues)):
+        if eigenvalues[i] < 1e-16:
+            eigenvalues[i] = 0
 
     return eigenvalues
 
@@ -58,27 +59,20 @@ def solve_homogeneous(matrix):
     return solutions
 
 
-def ortho_singular(matrix, ortho_type):
+def ortho_singular_left(matrix):
     """
     Returns an ndarray of orthogonal matrix created using the eigenvalues of
     said matrix.
 
     :param matrix: Matrix-like object.
-    :param ortho_type: Type of matrix output (i.e. left or right).
+    # :param ortho_type: Type of matrix output (i.e. left or right).
     :return: An orthogonal matrix consisted of singular vectors.
     """
-    global eigenvalue_array
-
-    if ortho_type == "left":
-        singular = np.matmul(matrix, np.transpose(matrix))
-    elif ortho_type == "right":
-        singular = np.matmul(np.transpose(matrix), matrix)
-    else:
-        print("Invalid ortho_type!")
-        return
+    singular = np.matmul(matrix, np.transpose(matrix))
+    eigenvalue_array = eigenvalue(singular)
 
     singular_shape = np.shape(singular)
-    ortho_matrix = np.empty(singular_shape)
+    ortho_matrix = np.zeros(singular_shape)
 
     for i in range(len(eigenvalue_array)):
         eigen_identity = np.zeros(singular_shape)
@@ -102,9 +96,15 @@ def singular_diagonal(matrix):
     :param matrix: Matrix-like object.
     :return: An ndarray of singular diagonal matrix.
     """
-    global eigenvalue_array
 
     matrix_shape = np.shape(matrix)
+    if matrix_shape[0] < matrix_shape[1]:
+        singular = np.matmul(matrix, np.transpose(matrix))
+        eigenvalue_array = eigenvalue(singular)
+    else:
+        singular = np.matmul(np.transpose(matrix), matrix)
+        eigenvalue_array = eigenvalue(singular)
+
     singular_value = np.sqrt(eigenvalue_array)
     sing_diag_matrix = np.zeros(matrix_shape)
     np.fill_diagonal(sing_diag_matrix, singular_value)
@@ -112,11 +112,43 @@ def singular_diagonal(matrix):
     return sing_diag_matrix
 
 
+def ortho_singular_right(matrix, left_singular, diagonal_singular):
+    """
+
+    :param matrix:
+    :param left_singular:
+    :param diagonal_singular:
+    :return: An orthogonal matrix consisted of singular vectors.
+    """
+    if np.shape(matrix)[0] < np.shape(matrix)[1]:
+        eigen_count = np.shape(matrix)[0]
+    else:
+        eigen_count = np.shape(matrix)[1]
+
+    i = 0
+    for i in range(eigen_count):
+        if diagonal_singular[i][i] < 1e-16:
+            break
+
+    diag_singular_inv = np.zeros((np.shape(matrix)[1], np.shape(matrix)[0]))
+    inv_diag = np.linalg.inv(diagonal_singular[:i, :i])
+    diag_singular_inv[:i, :i] = inv_diag
+
+    try:
+        left_singular_inv = np.linalg.inv(left_singular)
+    except np.linalg.LinAlgError:
+        left_singular_inv = np.transpose(left_singular)
+
+    right_singular = diag_singular_inv @ left_singular_inv @ matrix
+
+    return right_singular
+
+
 def decompose(matrix):
     """
     Returns a tuple consisted of an ndarray U representing a left-singular
     matrix, an ndarray Σ representing a singular-diagonal matrix, and an
-    ndarray V* representing a transposed righ-singular matrix.
+    ndarray V* representing a transposed right-singular matrix.
 
     Reference:
     https://informatika.stei.itb.ac.id/~rinaldi.munir/AljabarGeometri/2020-2021/Algeo-19b-Singular-value-decomposition.pdf
@@ -124,19 +156,11 @@ def decompose(matrix):
     :param matrix: Matrix-like object.
     :return: A tuple consisted of U, Σ, and V*
     """
-    global eigenvalue_array
+    matrix = np.array(matrix).astype("float64") / 255
 
-    matrix_shape = np.shape(matrix)
-    if matrix_shape[0] < matrix_shape[1]:
-        singular_matrix = np.matmul(matrix, np.transpose(matrix))
-    else:
-        singular_matrix = np.matmul(np.transpose(matrix), matrix)
-
-    eigenvalue_array = eigenvalue(singular_matrix)
-
-    left_singular = ortho_singular(matrix, "left")
+    left_singular = ortho_singular_left(matrix)
     diagonal_singular = singular_diagonal(matrix)
-    right_singular = ortho_singular(matrix, "right").transpose()
+    right_singular = ortho_singular_right(matrix, left_singular, diagonal_singular)
 
     return left_singular, diagonal_singular, right_singular
 
@@ -148,8 +172,12 @@ if __name__ == "__main__":
     #              [-5, 8, -5, 3]]
     # arr_result = eigenvalue(test_list)
     # print(arr_result)
-    test_array = [[3, 1, 1],
-                  [-1, 3, 1]]
+    test_array = [[227, 232, 217, 173, 212],
+                  [247, 174, 133, 218, 204],
+                  [237, 191, 86, 153, 186],
+                  [236, 180, 77, 132, 243],
+                  [237, 157, 73, 133, 248],
+                  [212, 217, 167, 170, 202]]
     # ortho_result_left = ortho_singular(test_array, "left")
     # ortho_result_right = ortho_singular(test_array, "right")
     # sing_diag = singular_diagonal(test_array)
@@ -159,6 +187,6 @@ if __name__ == "__main__":
     decomposition = decompose(test_array)
     for array in decomposition:
         print(array)
-    result = np.matmul(decomposition[0], decomposition[1])
-    result = np.matmul(result, decomposition[2])
+        print()
+    result = decomposition[0] @ decomposition[1] @ decomposition[2]
     print(result)
