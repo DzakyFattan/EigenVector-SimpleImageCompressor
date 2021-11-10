@@ -130,11 +130,16 @@ def ortho_singular_right(matrix, left_singular, diagonal_singular):
         if diagonal_singular[i][i] < 1e-16:
             break
 
-    diag_singular = np.zeros((np.shape(matrix)[1], np.shape(matrix)[0]))
+    diag_singular_inv = np.zeros((np.shape(matrix)[1], np.shape(matrix)[0]))
     inv_diag = np.linalg.inv(diagonal_singular[:i, :i])
-    diag_singular[:i, :i] = inv_diag
+    diag_singular_inv[:i, :i] = inv_diag
 
-    right_singular = diag_singular @ np.transpose(left_singular) @ matrix
+    try:
+        left_singular_inv = np.linalg.inv(left_singular)
+    except np.linalg.LinAlgError:
+        left_singular_inv = np.transpose(left_singular)
+
+    right_singular = diag_singular_inv @ left_singular_inv @ matrix
 
     return right_singular
 
