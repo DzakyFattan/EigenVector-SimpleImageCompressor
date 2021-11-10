@@ -16,14 +16,14 @@ def recompose(matrix, mode):
                                  :round(slicing_ratio * original_size) + 1]
     reduced_right = matrix[2][:round(slicing_ratio * original_size) + 1, :]
 
-    recomposed_matrix = reduced_left @ reduced_singular @ reduced_right
+    recomposed_matrix = (reduced_left @ reduced_singular @ reduced_right) * 255
 
     return recomposed_matrix.astype("uint8")
 
 
-def compress(og_image, mode=1):
+def compress(og_image, mode=5):
     image = Image.open(og_image)
-    image_matrix = np.array(image)
+    image_matrix = np.asarray(image)
 
     red_image = image_matrix[:, :, 0]
     green_image = image_matrix[:, :, 1]
@@ -46,5 +46,5 @@ def compress(og_image, mode=1):
 
 
 if __name__ == "__main__":
-    compressed = compress("../../test/aht.jpg")
+    compressed = compress("../../test/aht_og.jpg")
     compressed.show()
