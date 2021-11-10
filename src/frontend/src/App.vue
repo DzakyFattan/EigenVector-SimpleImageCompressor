@@ -11,7 +11,6 @@
 import Header from "./components/Header.vue";
 import Footer from "./components/Footer.vue";
 import Main from "./components/Main.vue";
-
 export default {
   name: "App",
   components: {
@@ -25,12 +24,12 @@ export default {
   provide() {
     return {};
   },
-};
+}
 </script>
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
