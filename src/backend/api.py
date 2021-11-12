@@ -12,8 +12,8 @@ IMG_FOLDER = './img'
 if not os.path.exists(IMG_FOLDER): os.makedirs(IMG_FOLDER)
 
 app = Flask(__name__,
-            static_folder = "../dist/static", 
-            template_folder="../dist")
+            static_folder = "../frontend/dist/static", 
+            template_folder="../frontend/dist")
 
 CORS(app, resources={r'/*': {'origins': '*'}})
 @app.route('/', defaults={'path': ''})
