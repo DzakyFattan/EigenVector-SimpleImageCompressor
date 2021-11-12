@@ -3,61 +3,90 @@
     <label for="file-upload" class="custom-file-upload">
       <i class="fa fa-cloud-upload"></i> Upload Image
     </label>
-    <input id="file-upload" accept="image/*" type="file" @change="onFileChange" />
-    <div v-if="url" class="card">
-      <div class="compress">Image compression rate :</div>
-      <input class="inputcompress" type="text" v-model="ratio" />
-      <div id="preview">
-        <img :src="url" />
+    <input
+      id="file-upload"
+      accept="image/*"
+      type="file"
+      @change="onFileChange"
+      @click="showresult = false"
+      
+      
+    />
+    <div v-if="uploadedImage" class="card">
+      <div class="compress">Compression rate :</div>
+      <div class="range">
+        <VueSimpleRangeSlider
+                    style="width: 100px"
+                    barColor="#15d3fd"
+                    :default="0"
+                    :min="0"
+                    :max="9"
+                    v-model="range"
+            />
       </div>
-      <button @click="showresult = true" class="button">Apply</button>
+      <button id="apply" @click="showresult = true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Apply</button>
+      <div id="preview">
+        <img :src="uploadedImage" />
+      </div>
       <div v-show="showresult">
+        <div id="result">
+          <img :src="uploadedImage" />
+        </div>
         <img src="../assets/Arrow.png" class="imgarrow" />
+        <div class="sizebefore">
+          before : {{ before }}
+        </div>
+        <div class="sizeafter">after : {{ after }}
+        </div>
         <div class="imgpercentage">
           Image pixel difference percentage : {{ percentage }}
         </div>
         <div class="imgtime">Image pixel compression time : {{ time }}</div>
+        <button class="download"><i class="fa fa-download"></i> Download</button>
+</a>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
-const API_URL = 'http://127.0.0.1:5000'
+import VueSimpleRangeSlider from 'vue-simple-range-slider';
+import 'vue-simple-range-slider/dist/vueSimpleRangeSlider.css'
+import axios from "axios";
+const API_URL = "http://127.0.0.1:5000";
 export default {
   name: "Main",
+  components: { VueSimpleRangeSlider },
   data() {
     return {
-      url: null,
-      ratio: "",
       showresult: false,
-      percentage: "20",
-      time: "30",
-      uploadedImage: ''
+      percentage: "",
+      time: "",
+      uploadedImage: "",
+      range: 0,
+      before: "",
+      after : "",
     };
   },
   methods: {
     onFileChange(e) {
-      let files = e.target.files || e.dataTransfer.files
-      const file = e.target.files[0]
-      this.url = URL.createObjectURL(file)
-      this.createImage(files[0])
+      let files = e.target.files || e.dataTransfer.files;
+      this.createImage(files[0]);
     },
     createImage(file) {
-      let reader = new FileReader()
+      let reader = new FileReader();
       reader.onload = (e) => {
-        this.uploadedImage = e.target.result
-      }
-      reader.readAsDataURL(file)
+        this.uploadedImage = e.target.result;
+      };
+      reader.readAsDataURL(file);
     },
     onUploadImage() {
-      var params = new FormData()
-      params.append('image', this.uploadedImage)
+      var params = new FormData();
+      params.append("image", this.uploadedImage);
       axios.post(`${API_URL}`, params).then(function (response) {
-        console.log(response)
-      })
-    }
+        console.log(response);
+      });
+    },
   },
 };
 </script>
@@ -94,6 +123,20 @@ export default {
   top: 70px;
 }
 
+#result {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#result img {
+  max-height: 400px;
+  max-width: 450px;
+  position: absolute;
+  left: 770px;
+  top: 70px;
+}
+
 input[type="file"] {
   display: none;
 }
@@ -127,10 +170,16 @@ input[type="file"] {
 
   color: #000000;
 }
-.button {
-  background-color: #4fe4f9;
+
+.range {
+  position: absolute;
+  left: 280px;
+  top: -7px;
+}
+
+#apply {
   color: white;
-  padding: 5px 10px;
+
   text-align: center;
   text-decoration: none;
   display: inline-block;
@@ -139,14 +188,7 @@ input[type="file"] {
   left: 400px;
   top: 18px;
 }
-input[type="text"] {
-  border: 2px solid;
-  width: 2%;
-  border-radius: 4px;
-  position: absolute;
-  left: 350px;
-  top: 23px;
-}
+
 .imgarrow {
   position: absolute;
   max-width: 15%;
@@ -157,7 +199,7 @@ input[type="text"] {
 .imgtime {
   position: absolute;
   left: 70px;
-  top: 550px;
+  top: 560px;
   font-family: Nunito;
   font-style: normal;
   font-weight: normal;
@@ -170,7 +212,7 @@ input[type="text"] {
 .imgpercentage {
   position: absolute;
   left: 70px;
-  top: 500px;
+  top: 520px;
 
   font-family: Nunito;
   font-style: normal;
@@ -180,5 +222,48 @@ input[type="text"] {
   text-align: left;
 
   color: #000000;
+}
+
+.sizebefore {
+  position: absolute;
+  left: 70px;
+  top: 470px;
+  font-family: Nunito;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 24px;
+  line-height: 33px;
+  text-align: left;
+
+  color: #000000;
+}
+
+.sizeafter {
+  position: absolute;
+  left: 770px;
+  top: 470px;
+  font-family: Nunito;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 24px;
+  line-height: 33px;
+  text-align: left;
+
+  color: #000000;
+}
+
+.download {
+  position: absolute;
+  background-color: DodgerBlue;
+  border: none;
+  color: white;
+  padding: 12px 30px;
+  cursor: pointer;
+  font-size: 20px;
+  left: 1050px;
+  top: 500px;
+}
+.download:hover {
+  background-color: RoyalBlue;
 }
 </style>

@@ -21,9 +21,9 @@ export default {
 .title {
   position: absolute;
   width: 600px;
-  height: 600px;
+  height: 150px;
   left: 39px;
-  top: -220px;
+  top: 0px;
 }
 .header_text {
   text-align: left;

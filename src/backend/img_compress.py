@@ -63,5 +63,5 @@ def compress(og_image, mode=5):
 
 
 if __name__ == "__main__":
-    compressed = compress("../../test/aht_og.jpg")
+    compressed = compress("aht_og.jpg")
     compressed.show()
