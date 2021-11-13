@@ -7,7 +7,7 @@ import sys
 import traceback
 
 
-def eigenvalue(matrix, eps=1e-10):
+def eigenvalue(matrix, eps=1e-3):
     """
     Returns an ndarray of matrix eigenvalues, sorted descendingly.
     Eigenvalues are approximated using QR-decomposition.
@@ -56,7 +56,7 @@ def solve_homogeneous(matrix):
     """
     u, s, vh = np.linalg.svd(matrix)
     solutions = np.compress(s == np.amin(s), vh, axis=0)
-    return solutions
+    return solutions[0]
 
 
 def ortho_singular_left(matrix):
