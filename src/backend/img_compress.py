@@ -12,7 +12,7 @@ def recompose(matrix, mode):
     Recompose the original image matrix from its Singular Value Decomposition.
 
     :param matrix: A tuple of left-orthogonal matrix, singular matrix, and
-                   right_orthogonal matrix, all normalised.
+                   right-orthogonal matrix, all normalised.
     :param mode: Integer representing the proportion of matrix row and column
                  to be removed.
     :return: An ndarray of recomposed and rescaled image matrix.
@@ -34,9 +34,9 @@ def compress(image, mode):
     """
     Compress a given image using Singular Value Decomposition.
 
-    :param og_image: An image object.
+    :param image: An image object.
     :param mode: Integer representing the proportion of matrix row and column
-                 to be removed. The default value is 5.
+                 to be removed.
     :return: A compressed image based on the mode.
     """
     image_matrix = np.array(image)
@@ -62,5 +62,5 @@ def compress(image, mode):
 
 
 if __name__ == "__main__":
-    compressed = compress("aht_og.jpg")
-    compressed.show()
+    compressed = compress("../../test/aht4.jpg", 5)
+    compressed.save("aht4_compressed.jpg")

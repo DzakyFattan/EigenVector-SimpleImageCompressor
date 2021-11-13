@@ -54,6 +54,7 @@ def solve_homogeneous(matrix):
     :param matrix: Matrix-like object.
     :return: An ndarray of solutions.
     """
+    # Built-in numpy svd is only used here for null space calculation
     u, s, vh = np.linalg.svd(matrix)
     solutions = np.compress(s == np.amin(s), vh, axis=0)
     return solutions[0]
@@ -65,7 +66,6 @@ def ortho_singular_left(matrix):
     said matrix.
 
     :param matrix: Matrix-like object.
-    # :param ortho_type: Type of matrix output (i.e. left or right).
     :return: An orthogonal matrix consisted of singular vectors.
     """
     singular = np.matmul(matrix, np.transpose(matrix))
