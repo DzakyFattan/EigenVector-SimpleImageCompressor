@@ -9,8 +9,6 @@
       type="file"
       @change="onFileChange"
       @click="showresult = false"
-      
-      
     />
     <div v-if="uploadedImage" class="card">
       <div class="compress">Compression rate :</div>
@@ -19,18 +17,18 @@
                     style="width: 100px"
                     barColor="#15d3fd"
                     :default="0"
-                    :min="0"
-                    :max="9"
+                    :min="1"
+                    :max="10"
                     v-model="range"
             />
       </div>
-      <button id="apply" @click="showresult = true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Apply</button>
+      <button id="apply" v-on:click="onUploadImage" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Apply</button>
       <div id="preview">
         <img :src="uploadedImage" />
       </div>
       <div v-show="showresult">
         <div id="result">
-          <img :src="uploadedImage" />
+          <img src="../../../img/image.jpg" />
         </div>
         <img src="../assets/Arrow.png" class="imgarrow" />
         <div class="sizebefore">
@@ -39,11 +37,10 @@
         <div class="sizeafter">after : {{ after }}
         </div>
         <div class="imgpercentage">
-          Image pixel difference percentage : {{ percentage }}
+          Image pixel difference percentage : {{ range * 10 }}%
         </div>
         <div class="imgtime">Image pixel compression time : {{ time }}</div>
         <button class="download"><i class="fa fa-download"></i> Download</button>
-</a>
       </div>
     </div>
   </div>
@@ -63,7 +60,9 @@ export default {
       percentage: "",
       time: "",
       uploadedImage: "",
-      range: 0,
+      convertedImage: "",
+      range: 1,
+      value: "",
       before: "",
       after : "",
     };
@@ -83,9 +82,11 @@ export default {
     onUploadImage() {
       var params = new FormData();
       params.append("image", this.uploadedImage);
+      params.append("value", this.range);
       axios.post(`${API_URL}`, params).then(function (response) {
         console.log(response);
       });
+      this.showresult = true;
     },
   },
 };

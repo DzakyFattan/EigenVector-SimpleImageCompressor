@@ -30,7 +30,7 @@ def recompose(matrix, mode):
     return recomposed_matrix.astype("uint8")
 
 
-def compress(og_image, mode=5):
+def compress(image, mode):
     """
     Compress a given image using Singular Value Decomposition.
 
@@ -39,9 +39,8 @@ def compress(og_image, mode=5):
                  to be removed. The default value is 5.
     :return: A compressed image based on the mode.
     """
-    image = Image.open(og_image)
-    image_matrix = np.asarray(image)
-
+    image_matrix = np.array(image)
+    mode = int(mode)
     red_image = image_matrix[:, :, 0]
     green_image = image_matrix[:, :, 1]
     blue_image = image_matrix[:, :, 2]
