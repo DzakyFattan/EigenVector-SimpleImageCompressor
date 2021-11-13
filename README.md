@@ -14,4 +14,14 @@ momentarily.
 TBD
 
 ## Setup
-TBD
+# install dependencies - vue-cli
+npm install
+
+# build for production 
+npm run build 
+
+# jalankan api.py di backend - localhost:5000
+
+
+# jalankan frontend saja - localhost:8080
+npm run dev
