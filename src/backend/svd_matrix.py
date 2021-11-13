@@ -134,10 +134,7 @@ def ortho_singular_right(matrix, left_singular, diagonal_singular):
     inv_diag = np.linalg.inv(diagonal_singular[:i, :i])
     diag_singular_inv[:i, :i] = inv_diag
 
-    try:
-        left_singular_inv = np.linalg.inv(left_singular)
-    except np.linalg.LinAlgError:
-        left_singular_inv = np.transpose(left_singular)
+    left_singular_inv = np.transpose(left_singular)
 
     right_singular = diag_singular_inv @ left_singular_inv @ matrix
 
