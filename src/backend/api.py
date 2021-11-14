@@ -3,6 +3,7 @@ from flask_cors import CORS
 from PIL import Image
 from io import BytesIO
 
+import time
 import json
 import base64
 import os
@@ -24,6 +25,7 @@ def catch_all(path):
 
 @app.route("/compress", methods=['GET','POST'])
 def upload_img():
+    time.sleep(2)
     f = open('../frontend/img/image.json')
     imgData = json.load(f)
     base64_jpg = imgData['image'][0]['base64']
