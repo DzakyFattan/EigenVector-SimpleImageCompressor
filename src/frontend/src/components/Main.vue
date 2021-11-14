@@ -59,9 +59,12 @@
         <div class="imgpercentage">
           Image pixel difference percentage : {{ range * 10 }}%
         </div>
+        <div class="resultnotice">
+          Save compression's result by right click
+        </div>
         <div class="imgtime">Image pixel compression time : {{ dur }}</div>
-        <button class="download">
-          <i class="fa fa-download"></i> Download
+        <button class="download" @click="reloadPage">
+          <i class="fa fa-download"></i> Compress more!
         </button>
       </div>
     </div>
@@ -103,6 +106,10 @@ export default {
       fetch("http://localhost:3000/image/1", {
         method: "DELETE",
       });
+    },
+    reloadPage() {
+      this.reset()
+      window.location.reload();
     },
     onFileChange(e) {
       let files = e.target.files || e.dataTransfer.files;
@@ -288,10 +295,24 @@ input[type="file"] {
   left: 550px;
 }
 
+.resultnotice {
+  position: absolute;
+  left: 770px;
+  top: 500px;
+  font-family: Nunito;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 24px;
+  line-height: 33px;
+  text-align: left;
+
+  color: #000000;
+}
+
 .imgtime {
   position: absolute;
   left: 70px;
-  top: 560px;
+  top: 530px;
   font-family: Nunito;
   font-style: normal;
   font-weight: normal;
@@ -304,7 +325,7 @@ input[type="file"] {
 .imgpercentage {
   position: absolute;
   left: 70px;
-  top: 520px;
+  top: 500px;
 
   font-family: Nunito;
   font-style: normal;
@@ -352,8 +373,8 @@ input[type="file"] {
   padding: 12px 30px;
   cursor: pointer;
   font-size: 20px;
-  left: 1050px;
-  top: 500px;
+  left: 960px;
+  top: 540px;
 }
 .download:hover {
   background-color: RoyalBlue;

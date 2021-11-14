@@ -13,7 +13,7 @@ app = Flask(__name__,
             static_folder = "../dist/static", 
             template_folder="../dist")
 
-IMG_FOLDER = '../backend/img/'
+IMG_FOLDER = './src/backend/img/'
 app.config['IMG_FOLDER'] = IMG_FOLDER
 
 CORS(app)
@@ -26,7 +26,7 @@ def catch_all(path):
 @app.route("/compress", methods=['GET','POST'])
 def upload_img():
     time.sleep(2)
-    f = open('../frontend/img/image.json')
+    f = open('./src/frontend/img/image.json')
     imgData = json.load(f)
     base64_jpg = imgData['image'][0]['base64']
     value = int(imgData['image'][0]['percentage'])
