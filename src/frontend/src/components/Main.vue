@@ -64,7 +64,7 @@
         </div>
         <div class="imgtime">Image pixel compression time : {{ dur }}</div>
         <button class="download" @click="reloadPage">
-          <i class="fa fa-download"></i> Compress more!
+          <i class="fa fa-chevron-circle-right"></i> Compress more!
         </button>
       </div>
     </div>
