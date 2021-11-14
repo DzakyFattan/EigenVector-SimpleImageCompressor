@@ -14,14 +14,17 @@ momentarily.
 TBD
 
 ## Setup
-# install dependencies - vue-cli
+### install dependencies yang diperlukan - vue-cli
 npm install
 
-# build for production 
-npm run build 
-
-# jalankan api.py di backend - localhost:5000
-
-
-# jalankan frontend saja - localhost:8080
+### jalankan frontend - localhost:8080
 npm run dev
+
+### jalankan json-server - localhost:3000
+npx json-server --watch img/image.json
+
+### jalankan api.py di backend - localhost:5000
+
+
+### Web Image compressor siap digunakan.
+
