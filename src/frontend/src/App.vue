@@ -10,12 +10,14 @@
 import Header from "./components/Header.vue";
 import Footer from "./components/Footer.vue";
 import Main from "./components/Main.vue";
+import Compress from "./components/Compress.vue";
 export default {
   name: "App",
   components: {
     Header,
     Footer,
     Main,
+    Compress,
   },
   data() {
     return {};

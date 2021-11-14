@@ -14,100 +14,63 @@
       <div class="compress">Compression rate :</div>
       <div class="range">
         <VueSimpleRangeSlider
-          style="width: 100px"
-          barColor="#15d3fd"
-          :default="0"
-          :min="1"
-          :max="10"
-          v-model="range"
-        />
+                    style="width: 100px"
+                    barColor="#15d3fd"
+                    :default="0"
+                    :min="1"
+                    :max="10"
+                    v-model="range"
+            />
       </div>
-      <button
-        id="apply"
-        v-on:click="onUploadImage"
-        class="
-          mdl-button mdl-js-button
-          mdl-button--raised
-          mdl-js-ripple-effect
-          mdl-button--accent
-        "
-      >
-        Apply
-      </button>
-      <button
-        id="reset"
-        v-on:click="reset"
-        class="
-          mdl-button mdl-js-button
-          mdl-button--raised
-          mdl-js-ripple-effect
-          mdl-button--accent
-        "
-      >
-        Reset
-      </button>
+      <button id="apply" v-on:click="onUploadImage" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Apply</button>
       <div id="preview">
         <img :src="uploadedImage" />
       </div>
       <div v-show="showresult">
         <div id="result">
-          <img :src="convertedImage" />
+          <img src="../assets/example.png" />
         </div>
         <img src="../assets/Arrow.png" class="imgarrow" />
-        <div class="sizebefore">before : {{ before }}</div>
-        <div class="sizeafter">after : {{ range }}</div>
+        <div class="sizebefore">
+          before : {{ before }}
+        </div>
+        <div class="sizeafter">after : {{ after }}
+        </div>
         <div class="imgpercentage">
           Image pixel difference percentage : {{ range * 10 }}%
         </div>
-        <div class="imgtime">Image pixel compression time : {{ dur }}</div>
-        <button class="download">
-          <i class="fa fa-download"></i> Download
-        </button>
+        <div class="imgtime">Image pixel compression time : {{ time }}</div>
+        <button class="download"><i class="fa fa-download"></i> Download</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import VueSimpleRangeSlider from "vue-simple-range-slider";
-import "vue-simple-range-slider/dist/vueSimpleRangeSlider.css";
+import VueSimpleRangeSlider from 'vue-simple-range-slider';
+import 'vue-simple-range-slider/dist/vueSimpleRangeSlider.css'
 import axios from "axios";
-const init_s = 0;
-const up_s = 1;
-const conv_s = 2;
+const API_URL = "http://127.0.0.1:5000/";
 export default {
   name: "Main",
   components: { VueSimpleRangeSlider },
   data() {
     return {
       showresult: false,
-      uploadStatus: init_s,
-      imgFile: "",
-      imgUrl: "",
+      percentage: "",
+      time: "",
       uploadedImage: "",
       convertedImage: "",
-      toJson: "",
       range: 1,
-      percentage: "",
-      s_time: "",
-      f_time: "",
-      dur: "",
+      value: "",
       before: "",
-      after: "",
+      after : "",
     };
   },
   methods: {
-    reset() {
-      this.time = 0;
-      this.uploadStatus = init_s;
-      fetch("http://localhost:3000/image/1", {
-        method: "DELETE",
-      });
-    },
     onFileChange(e) {
       let files = e.target.files || e.dataTransfer.files;
-      this.imgFile = files[0];
-      this.createImage(this.imgFile);
+      this.createImage(files[0]);
     },
     createImage(file) {
       let reader = new FileReader();
@@ -115,58 +78,26 @@ export default {
         this.uploadedImage = e.target.result;
       };
       reader.readAsDataURL(file);
-      this.uploadStatus = up_s;
     },
     onUploadImage() {
-      console.log(this.range);
-      const reader = new FileReader();
-      reader.readAsDataURL(this.imgFile);
-      reader.addEventListener("load", () => {
-        this.imgUrl = reader.result;
-        this.toJson = {
-          'base64': this.imgUrl,
-          'percentage': this.range,
-          'fileName': this.imgFile.name,
-        };
-        fetch("http://localhost:3000/image", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(this.toJson)
-        });
+      var params = new FormData();
+      params.append("image", this.uploadedImage);
+      params.append("value", this.range);
+      axios.post(`${API_URL}`, params).then(function (response) {
+        console.log(response);
       });
-
-      this.getCompImage();
+      this.showresult = true;
     },
     getCompImage() {
-      this.uploadStatus = conv_s;
-      this.timer(0);
-      axios
-        .get("http://localhost:5000/compress",{responseType: 'blob'})
-        .then((res) => {
-          this.timer(1);
-          this.dur = (this.f_time - this.s_time) / 1000;
-          this.getFile = res.data;
-          console.log(this.getFile);
-          const dataRead = new FileReader();
-          dataRead.readAsDataURL(this.getFile);
-          dataRead.addEventListener("load", () => {
-            this.convertedImage = dataRead.result;
-            console.log(this.convertedImage);
-          });
-          this.showresult = true;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
-    timer(c) {
-      var d = new Date();
-      if (c == 0) {
-        this.s_time = d.getTime();
-      } else if (c == 1) {
-        this.f_time = d.getTime();
-      }
-    },
+      axios.get('http://localhost:5000/compress')
+      .then(resp => resp.json())
+      .then(data => {
+        console.log(data);
+      })
+      .catch(error => {
+        console.log(error)
+      })
+    }
   },
 };
 </script>
@@ -266,18 +197,6 @@ input[type="file"] {
   font-size: 16px;
   position: absolute;
   left: 400px;
-  top: 18px;
-}
-
-#reset {
-  color: white;
-
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  position: absolute;
-  left: 600px;
   top: 18px;
 }
 
