@@ -50,7 +50,11 @@ momentarily.
    Assuming you've installed the latest version of Python and npm (if not, guides for it are widely available),
    1. ensure pip is installed by running `python -m ensurepip --upgrade`
    2. install the Python dependencies by running `pip install -r src/backend/requirements.txt`
-   3. install Vue CLI by running `npm install vue-cli`
+   3. install package dependencies by running  
+      `cd src/frontend`  
+      `npm install`
 2. Run the client by running `npm run dev`
 3. Run the server by running `npx json-server --watch img/image.json`
-4. Run the API by running `python -u src/backend/api.py`
+4. Run the API by running  
+   `cd ../backend`  
+   `python -u api.py`
