@@ -11,20 +11,46 @@ level according to their liking. The compressed image will be available to downl
 momentarily.
 
 ## Project Structure
-TBD
+```
+.
+├── doc
+├── src
+│   ├── backend
+│   │   ├── img
+│   │   │   └── image.jpg
+│   │   ├── .flaskenv
+│   │   ├── api.py
+│   │   ├── img_compress.py
+│   │   ├── README.md
+│   │   ├── requirements.txt
+│   │   └── svd_matrix.py
+│   └── frontend
+│       ├── config
+│       ├── img
+│       ├── src
+│       ├── static
+│       ├── .babelrc
+│       ├── .editorconfig
+│       ├── .eslintignore
+│       ├── .eslintrc.js
+│       ├── .gitignore
+│       ├── .postcssrc.js
+│       ├── index.html
+│       ├── package.json
+│       ├── package-lock.json
+│       ├── README.md
+│       └── vue.config.js
+├── test
+├── .gitignore
+└── README.md
+```
 
 ## Setup
-### install dependencies yang diperlukan - vue-cli
-npm install
-
-### jalankan frontend - localhost:8080
-npm run dev
-
-### jalankan json-server - localhost:3000
-npx json-server --watch img/image.json
-
-### jalankan api.py di backend - localhost:5000
-
-
-### Web Image compressor siap digunakan.
-
+1. Install the dependencies  
+   Assuming you've installed the latest version of Python and npm (if not, guides for it are widely available),
+   1. ensure pip is installed by running `python -m ensurepip --upgrade`
+   2. install the Python dependencies by running `pip install -r src/backend/requirements.txt`
+   3. install Vue CLI by running `npm install vue-cli`
+2. Run the client by running `npm run dev`
+3. Run the server by running `npx json-server --watch img/image.json`
+4. Run the API by running `python -u src/backend/api.py`
