@@ -1,5 +1,8 @@
 <template>
   <div class="main">
+    <div v-show="hasil">
+          <img src="../../../backend/img/image.jpg"/>
+      </div>
     <label for="file-upload" class="custom-file-upload">
       <i class="fa fa-cloud-upload"></i> Upload Image
     </label>
@@ -63,9 +66,10 @@
           Save compression's result by right click
         </div>
         <div class="imgtime">Image pixel compression time : {{ dur }}</div>
-        <button class="download" @click="reloadPage">
+        <button class="compressbtn" @click="reloadPage">
           <i class="fa fa-chevron-circle-right"></i> Compress more!
         </button>
+        <button @click="onClick()" class="download"><i class="fa fa-download"></i> Download</button>
       </div>
     </div>
   </div>
@@ -83,6 +87,7 @@ export default {
   components: { VueSimpleRangeSlider },
   data() {
     return {
+      hasil: true,
       showresult: false,
       uploadStatus: init_s,
       imgFile: "",
@@ -100,6 +105,22 @@ export default {
     };
   },
   methods: {
+    onClick() {
+              axios({
+                    url: this.convertedImage,
+                    method: 'GET',
+                    responseType: 'blob',
+                }).then((response) => {
+                     var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+                     var fileLink = document.createElement('a');
+   
+                     fileLink.href = fileURL;
+                     fileLink.setAttribute('download', 'img.jpg');
+                     document.body.appendChild(fileLink);
+   
+                     fileLink.click();
+                });
+    },
     reset() {
       this.time = 0;
       this.uploadStatus = init_s;
@@ -365,7 +386,7 @@ input[type="file"] {
   color: #000000;
 }
 
-.download {
+.compressbtn {
   position: absolute;
   background-color: DodgerBlue;
   border: none;
@@ -376,7 +397,24 @@ input[type="file"] {
   left: 960px;
   top: 540px;
 }
-.download:hover {
+.compressbtn:hover {
+  background-color: RoyalBlue;
+}
+
+.download {
+  position: absolute;
+  background-color: DodgerBlue;
+  border: none;
+  color: white;
+  padding: 12px 30px;
+  cursor: pointer;
+  font-size: 20px;
+  left: 700px;
+  top: 540px;
+}
+
+/* Darker background on mouse-over */
+.download {
   background-color: RoyalBlue;
 }
 </style>
