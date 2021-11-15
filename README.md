@@ -59,11 +59,12 @@ momentarily.
 4. Also on a separate cmd in a same folder (src/frontend), Run the API by running  
    `cd ../backend`  
    `python -u api.py`
+5. Go to the image compressor website by going to `http://localhost:8080/`
 
 ## Note
 1. **Click on the RESET button first** before reloading the page, if the image has been uploaded or while the compression is still running.
    If you fail to do so, navigate to `src/frontend/img`, open image.json and delete everything inside a square bracket
    ```"image": [<delete everything here>]```
 
-2. Save the compressed image by right-clicking (`Open image in new tab` or `Save image as...` ).
+2. Save the compressed image by Clicking the download button.
 3. The `Compress more!` button automatically reloads the page and reset the `image.json` file (The same behaviour that clicking the RESET button do).
