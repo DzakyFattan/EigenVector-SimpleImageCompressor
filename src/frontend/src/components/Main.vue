@@ -1,8 +1,5 @@
 <template>
   <div class="main">
-    <div v-show="hasil">
-          <img src="../../../backend/img/image.jpg"/>
-      </div>
     <label for="file-upload" class="custom-file-upload">
       <i class="fa fa-cloud-upload"></i> Upload Image
     </label>
@@ -87,7 +84,6 @@ export default {
   components: { VueSimpleRangeSlider },
   data() {
     return {
-      hasil: true,
       showresult: false,
       uploadStatus: init_s,
       imgFile: "",
@@ -129,11 +125,7 @@ export default {
       });
     },
     reloadPage() {
-      this.time = 0;
-      this.uploadStatus = init_s;
-      fetch("http://localhost:3000/image/1", {
-        method: "DELETE",
-      });
+      this.reset()
       window.location.reload();
     },
     onFileChange(e) {
