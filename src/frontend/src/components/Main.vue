@@ -46,6 +46,11 @@
       >
         Reset
       </button>
+      <div v-show="resetClicked">
+        <div class="resetClicked">
+          Reset! Save to reload!
+        </div>
+      </div>
       <div id="preview">
         <img :src="uploadedImage" />
       </div>
@@ -54,13 +59,8 @@
           <img :src="convertedImage" />
         </div>
         <img src="../assets/Arrow.png" class="imgarrow" />
-        <div class="sizebefore">before : {{ before }}</div>
-        <div class="sizeafter">after : {{ range }}</div>
         <div class="imgpercentage">
           Image pixel difference percentage : {{ range * 10 }}%
-        </div>
-        <div class="resultnotice">
-          Save compression's result by right click
         </div>
         <div class="imgtime">Image pixel compression time : {{ dur }}</div>
         <button class="compressbtn" @click="reloadPage">
@@ -85,6 +85,7 @@ export default {
   data() {
     return {
       showresult: false,
+      resetClicked: false,
       uploadStatus: init_s,
       imgFile: "",
       imgUrl: "",
@@ -123,6 +124,7 @@ export default {
       fetch("http://localhost:3000/image/1", {
         method: "DELETE",
       });
+      this.resetClicked = true;
     },
     reloadPage() {
       this.reset()
@@ -293,6 +295,20 @@ input[type="file"] {
   top: 18px;
 }
 
+.resetClicked {
+  position: absolute;
+  left: 770px;
+  top: 18px;
+  font-family: Nunito;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 24px;
+  line-height: 33px;
+  text-align: left;
+
+  color: #000000;
+}
+
 #reset {
   color: white;
 
@@ -312,24 +328,10 @@ input[type="file"] {
   left: 550px;
 }
 
-.resultnotice {
-  position: absolute;
-  left: 770px;
-  top: 500px;
-  font-family: Nunito;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 24px;
-  line-height: 33px;
-  text-align: left;
-
-  color: #000000;
-}
-
 .imgtime {
   position: absolute;
   left: 70px;
-  top: 530px;
+  top: 480px;
   font-family: Nunito;
   font-style: normal;
   font-weight: normal;
@@ -342,36 +344,8 @@ input[type="file"] {
 .imgpercentage {
   position: absolute;
   left: 70px;
-  top: 500px;
+  top: 510px;
 
-  font-family: Nunito;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 24px;
-  line-height: 33px;
-  text-align: left;
-
-  color: #000000;
-}
-
-.sizebefore {
-  position: absolute;
-  left: 70px;
-  top: 470px;
-  font-family: Nunito;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 24px;
-  line-height: 33px;
-  text-align: left;
-
-  color: #000000;
-}
-
-.sizeafter {
-  position: absolute;
-  left: 770px;
-  top: 470px;
   font-family: Nunito;
   font-style: normal;
   font-weight: normal;
@@ -391,7 +365,7 @@ input[type="file"] {
   cursor: pointer;
   font-size: 20px;
   left: 960px;
-  top: 540px;
+  top: 480px;
 }
 .compressbtn:hover {
   background-color: RoyalBlue;
@@ -405,12 +379,10 @@ input[type="file"] {
   padding: 12px 30px;
   cursor: pointer;
   font-size: 20px;
-  left: 700px;
-  top: 540px;
+  left: 760px;
+  top: 480px;
 }
-
-/* Darker background on mouse-over */
-.download {
+.download:hover {
   background-color: RoyalBlue;
 }
 </style>
