@@ -3,7 +3,7 @@
     <img class="title" src="../assets/Logo.png" alt="IMG Compressor Logo" />
     <div class="header_text">
       This IMG Compressor uses a smart combination of the best optimization and
-      lossy compression algorithms to shrink any type of image to the minimum
+      lossy compression algorithms to shrink image of type .jpg to the minimum
       possible size while keeping the required level of quality.
     </div>
   </div>

@@ -5,7 +5,7 @@
     </label>
     <input
       id="file-upload"
-      accept="image/*"
+      accept="image/jpeg"
       type="file"
       @change="onFileChange"
       @click="showresult = false"
