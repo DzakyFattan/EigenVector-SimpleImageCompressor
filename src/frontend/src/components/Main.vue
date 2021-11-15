@@ -108,7 +108,11 @@ export default {
       });
     },
     reloadPage() {
-      this.reset()
+      this.time = 0;
+      this.uploadStatus = init_s;
+      fetch("http://localhost:3000/image/1", {
+        method: "DELETE",
+      });
       window.location.reload();
     },
     onFileChange(e) {
