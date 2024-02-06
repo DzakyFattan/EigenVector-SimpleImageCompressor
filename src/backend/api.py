@@ -25,7 +25,7 @@ def catch_all(path):
 
 @app.route("/compress", methods=['GET','POST'])
 def upload_img():
-    time.sleep(2)
+    time.sleep(5)
     f = open('../frontend/img/image.json')
     imgData = json.load(f)
     base64_jpg = imgData['image'][0]['base64']
